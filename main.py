@@ -7,8 +7,7 @@ app = FastAPI(title="Transactional Order Management System")
 
 # 🚀 Allow React frontend
 origins = [
-    "http://localhost:5175",  # React (Vite)
-    "http://127.0.0.1:5173",
+    "http://localhost:5174",  # React (Vite)
 ]
 
 app.add_middleware(
