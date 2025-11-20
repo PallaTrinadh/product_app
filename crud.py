@@ -4,7 +4,7 @@ from . import models, schemas
 import uuid
 
 
-def create_order(db: Session, order_data: schemas.OrderCreate):
+def create_product_order(db: Session, order_data: schemas.OrderCreate):
 
     order_id = str(uuid.uuid4())
 
@@ -17,21 +17,21 @@ def create_order(db: Session, order_data: schemas.OrderCreate):
 
     total = 0
 
-    # Check each product stock
-    for item in order_data.items:
-        if item.product_id not in products:
-            raise HTTPException(404, f"Product {item.product_id} not found")
+    # # Check each product stock
+    # for item in order_data.items:
+    #     if item.product_id not in products:
+    #         raise HTTPException(404, f"Product {item.product_id} not found")
 
-        product = products[item.product_id]
-        if product.stock < item.quantity:
-            # FAIL ORDER
-            order = models.Order(id=order_id, status=models.OrderStatus.FAILED, total=0)
-            db.add(order)
-            db.commit()
-            db.refresh(order)
-            return order
+    #     product = products[item.product_id]
+    #     if product.stock < item.quantity:
+    #         # FAIL ORDER
+    #         order = models.Order(id=order_id, status=models.OrderStatus.FAILED, total=0)
+    #         # db.add(order)
+    #         # db.commit()
+    #         db.refresh(order)
+    #         return order
 
-        total += product.price * item.quantity
+    #     total += product.price * item.quantity
 
     order = models.Order(id=order_id, status=models.OrderStatus.SUCCESS, total=total)
     db.add(order)
@@ -42,11 +42,18 @@ def create_order(db: Session, order_data: schemas.OrderCreate):
         product = products[item.product_id]
         product.stock -= item.quantity
 
+        # order_item = models.OrderItem(
+        #     order_id=order.id,
+        #     product_id=product.id,
+        #     quantity=item.quantity,
+        #     unit_price=product.price
+        # )
         order_item = models.OrderItem(
-            order_id=order.id,
-            product_id=product.id,
-            quantity=item.quantity,
-            unit_price=product.price
+        order_id=order.id,
+        product_id=product.id,
+        quantity=item.quantity,
+        unit_price=product.price,
+        unit_qty=product.qty
         )
         db.add(order_item)
 
