@@ -26,8 +26,8 @@ def create_order(db: Session, order_data: schemas.OrderCreate):
         if product.stock < item.quantity:
             # FAIL ORDER
             order = models.Order(id=order_id, status=models.OrderStatus.FAILED, total=0)
-            db.add(order)
-            db.commit()
+            # db.add(order)
+            # db.commit()
             db.refresh(order)
             return order
 
@@ -42,11 +42,18 @@ def create_order(db: Session, order_data: schemas.OrderCreate):
         product = products[item.product_id]
         product.stock -= item.quantity
 
+        # order_item = models.OrderItem(
+        #     order_id=order.id,
+        #     product_id=product.id,
+        #     quantity=item.quantity,
+        #     unit_price=product.price
+        # )
         order_item = models.OrderItem(
-            order_id=order.id,
-            product_id=product.id,
-            quantity=item.quantity,
-            unit_price=product.price
+        order_id=order.id,
+        product_id=product.id,
+        quantity=item.quantity,
+        unit_price=product.price,
+        unit_qty=product.qty
         )
         db.add(order_item)
 
