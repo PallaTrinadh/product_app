@@ -4,7 +4,7 @@ from . import models, schemas
 import uuid
 
 
-def create_order(db: Session, order_data: schemas.OrderCreate):
+def create_product_order(db: Session, order_data: schemas.OrderCreate):
 
     order_id = str(uuid.uuid4())
 
