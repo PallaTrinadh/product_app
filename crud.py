@@ -33,7 +33,6 @@ def create_order(db: Session, order_data: schemas.OrderCreate):
 
         total += product.price * item.quantity
 
-    # 2) ORDER SUCCESS → create order row
     order = models.Order(id=order_id, status=models.OrderStatus.SUCCESS, total=total)
     db.add(order)
     db.flush()
